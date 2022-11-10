@@ -194,10 +194,38 @@ The basic autoscaler uses CPU metrics powered by the [metrics-server](https://gi
 kubectl top nodes
 
 # if you see "error: Metrics API not available" run this:
-kubectl apply -f labs/SRE/specs/metrics-server
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.4.1/components.yaml
+```
+### Edit the metric server deployment in kube-system namespace.
+```
+kubectl edit deployments.apps -n kube-system metrics-server 
 
+Append with two options, from
+
+    spec:
+      containers:
+      - args:
+        - --cert-dir=/tmp
+        - --secure-port=4443
+to this
+
+    spec:
+      containers:
+      - args:
+        - --cert-dir=/tmp
+        - --secure-port=4443
+        - --kubelet-insecure-tls=true
+        - --kubelet-preferred-address-types=InternalIP
+```
+### Add this below dns policy or at the end of the container section above the restart Policy.
+```
+      hostNetwork: true
+```
+### Test again
+```
 kubectl top nodes
 ```
+
 
 The Pi app is compute intensive so it's a good target for an HPA:
 
