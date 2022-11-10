@@ -1,5 +1,4 @@
-# Kubernetes Course Labs
+# SRE Lab
 
-Labs and exercises to help you learn Kubernetes.
+Labs and exercises to help you learn SRE concepts.
 
-Live at https://kubernetes.courselabs.co.
