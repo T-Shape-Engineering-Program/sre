@@ -62,13 +62,13 @@ We know Kubernetes restarts Pods when the container exits, but the app inside th
 
 The whoami app has a nice feature we can use to trigger a failure like that. 
 
-📋 Start by deploying the app from `labs/productionizing/specs/whoami`.
+📋 Start by deploying the app from `labs/SRE/specs/whoami`.
 
 <details>
   <summary>Not sure how?</summary>
 
 ```
-kubectl apply -f labs/productionizing/specs/whoami
+kubectl apply -f labs/SRE/specs/whoami
 ```
 
 </details><br/>
@@ -94,13 +94,13 @@ You can tell Kubernetes how to test your app is healthy with [container probes](
 
 - [whoami/update/deployment-with-readiness.yaml](specs/whoami/update/deployment-with-readiness.yaml) - adds a readiness probe, which makes an HTTP call to the /health endpoint of the app every 5 seconds
 
-📋 Deploy the update in `labs/productionizing/specs/whoami/update` and wait for the Pods with label `update=readiness` to be ready.
+📋 Deploy the update in `labs/SRE/specs/whoami/update` and wait for the Pods with label `update=readiness` to be ready.
 
 <details>
   <summary>Not sure how?</summary>
 
 ```
-kubectl apply -f labs/productionizing/specs/whoami/update
+kubectl apply -f labs/SRE/specs/whoami/update
 
 kubectl wait --for=condition=Ready pod -l app=whoami,update=readiness
 ```
@@ -150,13 +150,13 @@ For that you can use a liveness probe which will restart the Pod with a new cont
 
 You'll often have the same tests for readiness and liveness, but the liveness check has more significant consequences, so you may want it to run less frequently and have a higher failure threshold.
 
-📋 Deploy the update in `labs/productionizing/specs/whoami/update2` and wait for the Pods with label `update=liveness` to be ready.
+📋 Deploy the update in `labs/SRE/specs/whoami/update2` and wait for the Pods with label `update=liveness` to be ready.
 
 <details>
   <summary>Not sure how?</summary>
 
 ```
-kubectl apply -f labs/productionizing/specs/whoami/update2
+kubectl apply -f labs/SRE/specs/whoami/update2
 
 kubectl wait --for=condition=Ready pod -l app=whoami,update=liveness
 ```
@@ -194,7 +194,7 @@ The basic autoscaler uses CPU metrics powered by the [metrics-server](https://gi
 kubectl top nodes
 
 # if you see "error: Metrics API not available" run this:
-kubectl apply -f labs/productionizing/specs/metrics-server
+kubectl apply -f labs/SRE/specs/metrics-server
 
 kubectl top nodes
 ```
@@ -204,13 +204,13 @@ The Pi app is compute intensive so it's a good target for an HPA:
 - [pi/deployment.yaml](specs/pi/deployment.yaml) - Deployment which includes CPU resources
 - [pi/hpa-cpu.yaml](specs/pi/hpa-cpu.yaml) - HPA which will scale the Deployment, using 75% utilization of requested CPU as the threshold 
 
-📋 Deploy the app from `labs/productionizing/specs/pi`, check the metrics for the Pod and print the details for the HPA.
+📋 Deploy the app from `labs/SRE/specs/pi`, check the metrics for the Pod and print the details for the HPA.
 
 <details>
   <summary>Not sure how?</summary>
 
 ```
-kubectl apply -f labs/productionizing/specs/pi
+kubectl apply -f labs/SRE/specs/pi
 
 kubectl top pod -l app=pi-web 
 
@@ -245,7 +245,7 @@ Adding production concerns is often something you'll do after you've done the in
 So your task is to add container probes and security settings to the configurable app. Start by running it with a basic spec:
 
 ```
-kubectl apply -f labs/productionizing/specs/configurable
+kubectl apply -f labs/SRE/specs/configurable
 ```
 
 Try the app and you'll see it fails after 3 refreshes and never comes back online. There's a `/healthz` endpoint you can use to check that. Your goals are:
@@ -289,7 +289,7 @@ This alternative spec fixes those security issues:
 - [pi-secure/deployment.yaml](specs/pi-secure/deployment.yaml) - sets a non-root user, doesn't mount the SA token and drops Linux capabilities
 
 ```
-kubectl apply -f labs/productionizing/specs/pi-secure/
+kubectl apply -f labs/SRE/specs/pi-secure/
 
 kubectl get pod -l app=pi-secure-web --watch
 ```
@@ -306,7 +306,7 @@ Port 80 is privileged inside the container, so apps can't listen on it as a leas
   <summary>Not sure how?</summary>
 
 ```
-kubectl apply -f labs/productionizing/specs/pi-secure/update
+kubectl apply -f labs/SRE/specs/pi-secure/update
 
 kubectl wait --for=condition=Ready pod -l app=pi-secure-web,update=ports
 ```
@@ -331,5 +331,5 @@ ___
 ## Cleanup
 
 ```
-kubectl delete all,hpa -l kubernetes.courselabs.co=productionizing
+kubectl delete all,hpa -l kubernetes.courselabs.co=SRE
 ```
